@@ -12,22 +12,24 @@ python training.
 Getting Setup
 -------------
 
-1) Install the latest Python 3.6 (at least 3.6.1) from
-   https://www.python.org
+1) Install Python 3.6.1 or later from https://www.python.org
 
 2) Setup and activate a virtual environment:
 
+```bash
     $ python3.6 -m venv modernpython
     $ source modernpython/bin/activate
+```
 
-3) Install the packages used in the code
+3) Install the packages used in the examples:
 
-   (modernpython) $ pip install pyflakes
-   (modernpython) $ pip install bottle
-   (modernpython) $ pip install pytest
-   (modernpython) $ pip install hypothesis
-   (modernpython) $ pip install mypy
-
+```bash
+    (modernpython) $ pip install pyflakes
+    (modernpython) $ pip install bottle
+    (modernpython) $ pip install pytest
+    (modernpython) $ pip install hypothesis
+    (modernpython) $ pip install mypy
+```
 
 Resampling
 ----------
@@ -58,7 +60,9 @@ static resources (icons and photos).
 
 To start the service, run:
 
+```bash
     (modernpython) $ python webapp.py
+```
 
 Then point your browser to `http://localhost:8080/`
 
