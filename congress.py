@@ -15,8 +15,8 @@ Senator = NamedTuple('Senator', [('name', str), ('party', str), ('state', str)])
 VoteValue = float
 
 # Load votes arranged by topic and accumulate votes by senator
-vote_value: Dict[str, VoteValue] = {'Nay': -1, 'Not Voting': 0, 'Yea': 1}
-accumulated_record: DefaultDict[Senator, List[VoteValue]] = defaultdict(list)
+vote_value = {'Nay': -1, 'Not Voting': 0, 'Yea': 1} # type: Dict[str, VoteValue]
+accumulated_record = defaultdict(list)              # type: DefaultDict[Senator, List[VoteValue]]
 for filename in glob.glob('congress_data/*.csv'):
     with open(filename, encoding='utf-8') as f:
         reader = csv.reader(f)
@@ -27,22 +27,22 @@ for filename in glob.glob('congress_data/*.csv'):
             accumulated_record[senator].append(vote_value[vote])
 
 # Transform record into plain dict mapping a senator to a tuple of vote values
-record: Dict[Senator, Tuple[VoteValue, ...]] = {senator: tuple(votes) for senator, votes in accumulated_record.items() }
+record = {senator: tuple(votes) for senator, votes in accumulated_record.items() } # type: Dict[Senator, Tuple[VoteValue, ...]]
 
 # Use k-means to locate the cluster centroids and assign senators to the nearest cluster
 centroids = k_means(record.values(), k=3, iterations=50)
 clustered_votes = assign_data(centroids, record.values())
 
 # Build a reverse mapping from a pattern of votes to senators who voted that way
-votes_to_senators: DefaultDict[Tuple[VoteValue, ...], List[Senator]] = defaultdict(list)
+votes_to_senators = defaultdict(list)   # type: DefaultDict[Tuple[VoteValue, ...], List[Senator]]
 for senator, votes in record.items():
     votes_to_senators[votes].append(senator)
-assert sum(len(cluster) for cluster in clustered_votes.values()) == 100
+assert sum(map(len, clustered_votes.values())) == 100
 
 # Display the clusters and the members of each cluster
 for i, votes_in_cluster in enumerate(clustered_votes.values(), start=1):
     print(f'=========== Voting Cluster #{i} ===========')
-    party_totals: Counter = Counter()
+    party_totals = Counter()            # type: Counter
     for votes in set(votes_in_cluster):
         for senator in votes_to_senators[votes]:
             party_totals[senator.party] += 1
