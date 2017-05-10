@@ -42,7 +42,7 @@ def posts_by_user(user: User, limit: Optional[int] = None) -> List[Post]:
     return list(islice(user_posts[user], limit))
 
 def posts_for_user(user: User, limit: Optional[int] = None) -> List[Post]:
-    relevant = merge(*[user_posts[user] for user in following[user]], reverse=True)
+    relevant = merge(*[user_posts[u] for u in following[user]], reverse=True)
     return list(islice(relevant, limit))
 
 def get_followers(user: User) -> List[User]:
