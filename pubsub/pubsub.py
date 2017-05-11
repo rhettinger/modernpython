@@ -26,7 +26,7 @@ following = defaultdict(set)        # type: DefaultDict[User, Set[User]]
 followers = defaultdict(set)        # type: DefaultDict[User, Set[User]]
 user_info = dict()                  # type: Dict[User, UserInfo]
 
-def post_message(user: User, text: str, timestamp: Timestamp=None) -> None:
+def post_message(user: User, text: str, timestamp: Optional[Timestamp]=None) -> None:
     user = intern(user)
     timestamp = timestamp or time()
     post = Post(timestamp, user, text)
@@ -61,7 +61,7 @@ def hash_password(user: User, password: str) -> bytes:
     combined = unicodedata.normalize('NFC', combined)
     return hashlib.pbkdf2_hmac('sha512', combined.encode('utf-8'), salt, 100000)
 
-def set_user(user: User, displayname: str, email: str, password: str, bio=None, photo=None) -> None:
+def set_user(user: User, displayname: str, email: str, password: str, bio: Optional[str]=None, photo: Optional[str]=None) -> None:
     user = intern(user)
     hashed_password = hash_password(user, password)
     user_info[user] = UserInfo(displayname, email, hashed_password, bio, photo)
