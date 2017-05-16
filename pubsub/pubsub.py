@@ -1,5 +1,8 @@
 'Simple message publisher/subscriber service'
 
+import sys
+assert sys.version_info[:3] >= (3, 6, 1), "Requires 3.6.1 or later"
+
 from typing import List, Tuple, DefaultDict, Set, Optional, NamedTuple, Deque, Dict
 from collections import deque, defaultdict
 import hashlib
