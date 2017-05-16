@@ -4,9 +4,13 @@ Modern Python: Big ideas, Little Code
 This code is offered as an accompaniment to a Python Video course
 by Raymond Hettinger.
 
+See [Modern Python: Big Ideas, Little Code][1].
+
 Raymond runs an international Python training and consulting
 company and is available for basic, intermediate, and advanced
 python training.
+
+[1]: http://www.informit.com/store/modern-python-livelessons-big-ideas-and-little-code-9780134743417
 
 
 Getting Setup
