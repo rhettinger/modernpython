@@ -18,7 +18,7 @@ VoteValue = float
 vote_value = {'Nay': -1, 'Not Voting': 0, 'Yea': 1} # type: Dict[str, VoteValue]
 accumulated_record = defaultdict(list)              # type: DefaultDict[Senator, List[VoteValue]]
 for filename in glob.glob('congress_data/*.csv'):
-    with open(filename, encoding='utf-8') as f:
+    with open(filename) as f:
         reader = csv.reader(f)
         vote_topic = next(reader)
         headers = next(reader)
@@ -27,7 +27,7 @@ for filename in glob.glob('congress_data/*.csv'):
             accumulated_record[senator].append(vote_value[vote])
 
 # Transform record into plain dict mapping a senator to a tuple of vote values
-record = {senator: tuple(votes) for senator, votes in accumulated_record.items() } # type: Dict[Senator, Tuple[VoteValue, ...]]
+record = {senator: tuple(votes) for senator, votes in accumulated_record.items()} # type: Dict[Senator, Tuple[VoteValue, ...]]
 
 # Use k-means to locate the cluster centroids and assign senators to the nearest cluster
 centroids = k_means(record.values(), k=3, iterations=50)

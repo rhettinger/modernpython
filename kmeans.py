@@ -19,19 +19,19 @@ def mean(data: Iterable[float]) -> float:
 
 def dist(p: Point, q: Point, sqrt=sqrt, fsum=fsum, zip=zip) -> float:
     'Euclidean distance'
-    return sqrt(fsum((x - y) ** 2.0 for x, y in zip(p, q)))
+    return sqrt(fsum((x1 - x2) ** 2.0 for x1, x2 in zip(p, q)))
 
 def assign_data(centroids: Sequence[Centroid], data: Iterable[Point]) -> Dict[Centroid, Sequence[Point]]:
     'Assign data the closest centroid'
     d : DefaultDict[Point, List[Point]] = defaultdict(list)
-    for p in data:
-        centroid: Point = min(centroids, key=partial(dist, p))
-        d[centroid].append(p)
+    for point in data:
+        centroid: Point = min(centroids, key=partial(dist, point))
+        d[centroid].append(point)
     return dict(d)
 
 def compute_centroids(groups: Iterable[Sequence[Point]]) -> List[Centroid]:
     'Compute the centroid of each group'
-    return [tuple(map(mean, zip(*pts))) for pts in groups]
+    return [tuple(map(mean, zip(*group))) for group in groups]
 
 def quality(labeled: Dict[Centroid, Sequence[Point]]) -> float:
     'Mean value of squared distances from data to its assigned centroid'
