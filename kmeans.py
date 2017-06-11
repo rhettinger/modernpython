@@ -9,9 +9,6 @@ def partial(func, *args):
         return func(*args, *moreargs)
     return inner
 
-Point = Tuple[float, ...]
-Centroid = Point
-
 def mean(data: Iterable[float]) -> float:
     'Accurate arithmetic mean'
     data = list(data)
@@ -21,8 +18,11 @@ def transpose(matrix: Iterable[Iterable]) -> Iterable[tuple]:
     'Swap rows with columns for a 2-D array'
     return zip(*matrix)
 
+Point = Tuple[float, ...]
+Centroid = Point
+
 def dist(p: Point, q: Point, sqrt=sqrt, fsum=fsum, zip=zip) -> float:
-    'Euclidean distance'
+    'Multi-dimensional euclidean distance'
     return sqrt(fsum((x1 - x2) ** 2.0 for x1, x2 in zip(p, q)))
 
 def assign_data(centroids: Sequence[Centroid], data: Iterable[Point]) -> Dict[Centroid, Sequence[Point]]:
@@ -46,10 +46,16 @@ def k_means(data: Iterable[Point], k:int=2, iterations:int=10) -> List[Point]:
         centroids = compute_centroids(labeled.values())
     return centroids
 
+def quality(labeled: Dict[Centroid, Sequence[Point]]) -> float:
+    'Mean value of squared distances from data to its assigned centroid'
+    return mean(dist(c, p) ** 2 for c, pts in labeled.items() for p in pts)
+
+
 if __name__ == '__main__':
 
     from pprint import pprint
 
+    print('Simple example with six 3-D points clustered into two groups')
     points = [
         (10, 41, 23),
         (22, 30, 29),
@@ -62,12 +68,10 @@ if __name__ == '__main__':
     centroids = k_means(points, k=2)
     pprint(assign_data(centroids, points))
 
-if __name__ == '__main__':
-    # https://www.datascience.com/blog/introduction-to-k-means-clustering-algorithm-learn-data-science-tutorials
-    from pprint import pprint
+    print('\nExample with a richer dataset.')
+    print('See: https://www.datascience.com/blog/introduction-to-k-means-clustering-algorithm-learn-data-science-tutorials')
 
     data = [
-
          (10, 30),
          (12, 50),
          (14, 70),
@@ -89,8 +93,9 @@ if __name__ == '__main__':
          (90, 160),
     ]
 
-    # 5583  1338  1202  668  611  409  463
-    centroids = k_means(data, k=4, iterations=20)
-    d = assign_data(centroids, data)
-    pprint(d)
-
+    print('k     quality')
+    print('-     -------')
+    for k in range(1, 8):
+        centroids = k_means(data, k, iterations=20)
+        d = assign_data(centroids, data)
+        print(f'{k}    {quality(d) :8,.1f}')
