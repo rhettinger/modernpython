@@ -2,9 +2,9 @@ from typing import Tuple, Iterable, Sequence, List, Dict, DefaultDict
 from random import sample
 from math import fsum, sqrt
 from collections import defaultdict
-# from functools import partial
 
 def partial(func, *args):
+    "Rewrite functools.partial() in a way that doesn't confuse mypy"
     def inner(*moreargs):
         return func(*args, *moreargs)
     return inner
@@ -16,6 +16,10 @@ def mean(data: Iterable[float]) -> float:
     'Accurate arithmetic mean'
     data = list(data)
     return fsum(data) / len(data)
+
+def transpose(matrix: Iterable[Iterable]) -> Iterable[tuple]:
+    'Swap rows with columns for a 2-D array'
+    return zip(*matrix)
 
 def dist(p: Point, q: Point, sqrt=sqrt, fsum=fsum, zip=zip) -> float:
     'Euclidean distance'
@@ -31,11 +35,7 @@ def assign_data(centroids: Sequence[Centroid], data: Iterable[Point]) -> Dict[Ce
 
 def compute_centroids(groups: Iterable[Sequence[Point]]) -> List[Centroid]:
     'Compute the centroid of each group'
-    return [tuple(map(mean, zip(*group))) for group in groups]
-
-def quality(labeled: Dict[Centroid, Sequence[Point]]) -> float:
-    'Mean value of squared distances from data to its assigned centroid'
-    return mean(dist(c, p) ** 2 for c, pts in labeled.items() for p in pts)
+    return [tuple(map(mean, transpose(group))) for group in groups]
 
 def k_means(data: Iterable[Point], k:int=2, iterations:int=10) -> List[Point]:
     'Return k-centroids for the data'
@@ -92,6 +92,5 @@ if __name__ == '__main__':
     # 5583  1338  1202  668  611  409  463
     centroids = k_means(data, k=4, iterations=20)
     d = assign_data(centroids, data)
-    print(quality(d))
     pprint(d)
 
