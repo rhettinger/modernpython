@@ -34,7 +34,7 @@ print(sum(trial() for i in range(10000)) / 10000.0)
 
 # Probability of the median of 5 samples being in the
 # middle two quartiles of the population
-trial = lambda :  2500 <= sorted([randrange(10000) for i in range(5)])[2] < 7500
+trial = lambda :  2500 <= sorted(randrange(10000) for i in range(5))[2] < 7500
 print(sum(trial() for i in range(10000)) / 10000.0)    # compare with the beta distribution
 
 # An exact permutation text
