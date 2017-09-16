@@ -17,10 +17,11 @@ from sys import intern
 
 User = str
 Timestamp = float
+HashAndSalt = Tuple[bytes, bytes]
 
 Post = NamedTuple('Post', [('timestamp', float), ('user', User), ('text', str)])
 UserInfo = NamedTuple('UserInfo', [('displayname', str), ('email', str),
-                                   ('hashed_password', bytes), ('bio', str),
+                                   ('hashed_password', HashAndSalt), ('bio', str),
                                    ('photo', str)])
 
 posts = deque()                     # type: Deque[Post]     # Posts from newest to oldest
@@ -58,21 +59,22 @@ def search(phrase:str, limit: Optional[int] = None) -> List[Post]:
     # XXX this could benefit from caching and from preindexing
     return list(islice((post for post in posts if phrase in post.text), limit))
 
-def hash_password(user: User, password: str) -> bytes:
-    salt = b'alchemists discovered that gold came from earth air fire and water'
-    combined = repr((user, password))
-    combined = unicodedata.normalize('NFC', combined)
-    return hashlib.pbkdf2_hmac('sha512', combined.encode('utf-8'), salt, 100000)
+def hash_password(password: str, salt: Optional[bytes] = None) -> HashAndSalt:
+    pepper = b'alchemists discovered that gold came from earth air fire and water'
+    salt = salt or secrets.token_bytes(16)
+    salted_pass = salt + password.encode('utf-8')
+    return hashlib.pbkdf2_hmac('sha512', salted_pass, pepper, 100000), salt
 
 def set_user(user: User, displayname: str, email: str, password: str, bio: Optional[str]=None, photo: Optional[str]=None) -> None:
     user = intern(user)
-    hashed_password = hash_password(user, password)
+    hashed_password = hash_password(password)
     user_info[user] = UserInfo(displayname, email, hashed_password, bio, photo)
 
 def check_user(user: User, password: str) -> bool:
+    hashpass, salt = user_info[user].hashed_password
+    target_hash_pass = hash_password(password, salt)[0]
     sleep(random.expovariate(10))
-    return secrets.compare_digest(hash_password(user, password),
-                                  user_info[user].hashed_password)
+    return secrets.compare_digest(hashpass, target_hash_pass)
 
 def get_user(user: User) -> UserInfo:
     return user_info[user]
