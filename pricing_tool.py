@@ -23,7 +23,7 @@ if __name__ == '__main__':
     portfolio = [
         PriceRange('stock', 'CSCO', 26, 35),
         PriceRange('option', 'HP', 11, 45),
-        PriceRange('stockk', 'BOA', 32, 46),
+        PriceRange('stock', 'BOA', 32, 46),
         PriceRange('stock', 'WLP', 12.87, 334.15),
         PriceRange('option', 'WLPWLP', 1.87, 14.15),
         PriceRange('option', 'boa', 34, 45),
