@@ -92,4 +92,4 @@ def fetch_static(filename):
     return static_file(filename, root='static')
 
 if __name__ == '__main__':
-    run(host='localhost', port=8082)
+    run(host='localhost', port=8080)
