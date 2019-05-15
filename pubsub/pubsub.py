@@ -18,10 +18,17 @@ User = str
 Timestamp = float
 HashAndSalt = Tuple[bytes, bytes]
 
-Post = NamedTuple('Post', [('timestamp', float), ('user', User), ('text', str)])
-UserInfo = NamedTuple('UserInfo', [('displayname', str), ('email', str),
-                                   ('hashed_password', HashAndSalt), ('bio', Optional[str]),
-                                   ('photo', Optional[str])])
+class Post(NamedTuple):
+    timestamp: float
+    user: User
+    text: str
+
+class UserInfo(NamedTuple):
+    displayname: str
+    email: str
+    hashed_password: HashAndSalt
+    bio: Optional[str]
+    photo: Optional[str]
 
 posts = deque()                     # type: Deque[Post]     # Posts from newest to oldest
 user_posts = defaultdict(deque)     # type: DefaultDict[User, Deque[Post]]
