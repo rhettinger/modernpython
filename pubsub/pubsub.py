@@ -13,6 +13,7 @@ from time import time, sleep
 from heapq import merge
 from bisect import bisect
 from sys import intern
+import pickle
 import re
 
 User = str
@@ -101,3 +102,12 @@ def age(post: Post) -> str:
     divisor, unit = time_units[bisect(time_unit_cuts, seconds)]
     units = seconds // divisor
     return '%d %s ago' % (units, unit + ('' if units==1 else 's'))
+
+def save():
+    with open('pubsub.pickle', 'wb') as f:
+        pickle.dump([posts, user_posts, hashtag_index, following, followers, user_info], f)
+
+def restore():
+    global posts, user_posts, hashtag_index, following, followers, user_info
+    with open('pubsub.pickle', 'rb') as f:
+        posts, user_posts, hashtag_index, following, followers, user_info = pickle.load(f)

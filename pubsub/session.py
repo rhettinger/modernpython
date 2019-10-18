@@ -34,6 +34,13 @@ follow('raymondh', followed_user='selik')
 follow('raymondh', followed_user='barry')
 
 if __name__ == '__main__':
+    import pubsub
+
+    pubsub.save()
+    del pubsub.posts, pubsub.user_posts, pubsub.hashtag_index,
+    del pubsub.followers, pubsub.following, pubsub.user_info
+    pubsub.restore()
+
     from pubsub import posts, followers, following, user_info, hashtag_index
     from pubsub import posts_by_user, posts_for_user, search
     from pubsub import get_followers, get_followed, get_user, check_user, age
