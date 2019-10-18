@@ -22,7 +22,7 @@ HashAndSalt = Tuple[bytes, bytes]
 HashTag = str
 
 class Post(NamedTuple):
-    timestamp: float
+    timestamp: Timestamp
     user: User
     text: str
 
