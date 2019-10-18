@@ -13,10 +13,12 @@ from time import time, sleep
 from heapq import merge
 from bisect import bisect
 from sys import intern
+import re
 
 User = str
 Timestamp = float
 HashAndSalt = Tuple[bytes, bytes]
+HashTag = str
 
 class Post(NamedTuple):
     timestamp: float
@@ -32,9 +34,12 @@ class UserInfo(NamedTuple):
 
 posts = deque()                     # type: Deque[Post]     # Posts from newest to oldest
 user_posts = defaultdict(deque)     # type: DefaultDict[User, Deque[Post]]
+hashtag_index = defaultdict(deque)  # type: DefaultDict[HashTag, Deque[Post]]
 following = defaultdict(set)        # type: DefaultDict[User, Set[User]]
 followers = defaultdict(set)        # type: DefaultDict[User, Set[User]]
 user_info = dict()                  # type: Dict[User, UserInfo]
+
+hashtag_pattern = re.compile(r'#\w+')
 
 def post_message(user: User, text: str, timestamp: Optional[Timestamp]=None) -> None:
     user = intern(user)
@@ -42,6 +47,8 @@ def post_message(user: User, text: str, timestamp: Optional[Timestamp]=None) -> 
     post = Post(timestamp, user, text)
     posts.appendleft(post)
     user_posts[user].appendleft(post)
+    for hashtag in hashtag_pattern.findall(text):
+        hashtag_index[hashtag].appendleft(post)
 
 def follow(user: User, followed_user: User) -> None:
     user, followed_user = intern(user), intern(followed_user)
@@ -62,7 +69,8 @@ def get_followed(user: User) -> List[User]:
     return sorted(following[user])
 
 def search(phrase:str, limit: Optional[int] = None) -> List[Post]:
-    # XXX this could benefit from caching and from preindexing
+    if hashtag_pattern.match(phrase):
+        return list(islice(hashtag_index[phrase], limit))
     return list(islice((post for post in posts if phrase in post.text), limit))
 
 def hash_password(password: str, salt: Optional[bytes] = None) -> HashAndSalt:

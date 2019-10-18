@@ -34,7 +34,7 @@ follow('raymondh', followed_user='selik')
 follow('raymondh', followed_user='barry')
 
 if __name__ == '__main__':
-    from pubsub import posts, followers, following, user_info
+    from pubsub import posts, followers, following, user_info, hashtag_index
     from pubsub import posts_by_user, posts_for_user, search
     from pubsub import get_followers, get_followed, get_user, check_user, age
 
@@ -57,6 +57,8 @@ if __name__ == '__main__':
     pprint(posts_for_user('davin', limit=6))
     print('\nSearch for #python (4)')
     pprint(search('#python', limit=4))
+    print('\nSearch for python (4)')
+    pprint(search('python', limit=4))
     print("\nRaymond's followers")
     pprint(get_followers('raymondh'))
     print("\nDavin follows")
@@ -65,3 +67,5 @@ if __name__ == '__main__':
     print(get_user('barry'))
     print("\nPost ages")
     pprint(list(map(age, posts)))
+    print('\nHash tag index:')
+    pprint(hashtag_index)
