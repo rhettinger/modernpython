@@ -64,14 +64,15 @@ def verify_user_exists(user):
 @view('user')
 def show_user_page(user):
     verify_user_exists(user)
-    return dict(user=user, posts=pubsub.user_posts[user], heading="Recent posts", comb=comb)
+    posts = pubsub.posts_by_user(user, limit=10)
+    return dict(user=user, posts=posts, heading="Recent posts", comb=comb)
 
 @get('/<user>/followers')
 @view('follow')
 def show_followers(user):
     verify_user_exists(user)
     return dict(
-        users = pubsub.followers[user],
+        users = pubsub.get_followers(user),
         who_does_what = f'Who follows {user}',
         comb = comb,
     )
@@ -81,7 +82,7 @@ def show_followers(user):
 def show_following(user):
     verify_user_exists(user)
     return dict(
-        users = pubsub.following[user],
+        users = pubsub.get_followed(user),
         who_does_what = f'Who {user} is following',
         comb = comb,
     )
