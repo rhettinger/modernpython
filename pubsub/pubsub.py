@@ -37,7 +37,7 @@ following = defaultdict(set)        # type: DefaultDict[User, Set[User]]
 followers = defaultdict(set)        # type: DefaultDict[User, Set[User]]
 user_info = dict()                  # type: Dict[User, UserInfo]
 
-hashtag_pattern = re.compile(r'#\w+')
+hashtag_pattern = re.compile(r'[#@]\w+')
 
 def post_message(user: User, text: str, timestamp: Optional[Timestamp]=None) -> None:
     user = intern(user)
