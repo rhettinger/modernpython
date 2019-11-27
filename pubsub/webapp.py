@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 import secrets
 from bottle import get, run, post, view, abort
 from bottle import response, request, static_file, template
@@ -13,7 +13,7 @@ logged_in_users: Dict[bytes, User] = {}
 
 @get('/')
 @view('main')
-def show_main_page(user=None):
+def show_main_page(user=None) -> dict:
     user = user or get_logged_in_user()
     if user is None:
         return template('login', null=None)
@@ -22,24 +22,24 @@ def show_main_page(user=None):
     return dict(user=user, posts=posts, heading=heading, comb=comb)
 
 @post('/')
-def check_credentials():
+def check_credentials() -> None:
     user = request.forms.get('user', '')
     password = request.forms.get('password', '')
     if not pubsub.check_user(user, password):
         return show_main_page()
     token = secrets.token_bytes(32)
-    logged_in_users.setdefault(token, user)
+    logged_in_users[token] = user
     response.set_cookie('token', token, max_age=60, secret=secret)
     return show_main_page(user)
 
-def get_logged_in_user():
+def get_logged_in_user() -> Optional[User]:
     token = request.get_cookie('token', secret=secret)
     if token is not None:
         return logged_in_users.get(token)
     return None
 
 @post('/postmessage')
-def post_message():
+def post_message() -> None:
     user = get_logged_in_user()
     if user is None:
         return template('login', null=None)
@@ -50,26 +50,26 @@ def post_message():
 
 @get('/search')
 @view('main')
-def show_search():
+def show_search() -> dict:
     user = get_logged_in_user()
     phrase = request.query.get('phrase', '')
     posts = pubsub.search(phrase, limit=10)
     heading = f'Posts matching: {phrase}'
     return dict(user=user, posts=posts, heading=heading, comb=comb)
 
-def verify_user_exists(user):
-    pubsub.user_info[user] or abort(404, f'Unknown user: {user!r}')
+def verify_user_exists(user) -> None:
+    pubsub.get_user(user) or abort(404, f'Unknown user: {user!r}')
 
 @get('/<user>')
 @view('user')
-def show_user_page(user):
+def show_user_page(user) -> dict:
     verify_user_exists(user)
     posts = pubsub.posts_by_user(user, limit=10)
     return dict(user=user, posts=posts, heading="Recent posts", comb=comb)
 
 @get('/<user>/followers')
 @view('follow')
-def show_followers(user):
+def show_followers(user) -> dict:
     verify_user_exists(user)
     return dict(
         users = pubsub.get_followers(user),
@@ -79,7 +79,7 @@ def show_followers(user):
 
 @get('/<user>/following')
 @view('follow')
-def show_following(user):
+def show_following(user) -> dict:
     verify_user_exists(user)
     return dict(
         users = pubsub.get_followed(user),
