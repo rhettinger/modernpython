@@ -66,7 +66,7 @@ def get_followers(user: User) -> List[User]:
 def get_followed(user: User) -> List[User]:
     return sorted(following[user])
 
-def search(phrase:str, limit: Optional[int] = None) -> List[Post]:
+def search(phrase: str, limit: Optional[int] = None) -> List[Post]:
     if hashtag_pattern.match(phrase):
         return list(islice(hashtag_index[phrase], limit))
     return list(islice((post for post in posts if phrase in post.text), limit))

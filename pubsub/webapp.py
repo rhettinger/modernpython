@@ -1,9 +1,9 @@
 from typing import Dict
+import secrets
 from bottle import get, run, post, view, abort
 from bottle import response, request, static_file, template
 import pubsub
 import pubsub as comb
-import secrets
 import session
 
 secret = 'the life expectancy of a lannister stark or targaryen is short'

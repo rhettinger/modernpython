@@ -1,8 +1,8 @@
-'Sample data to test the pubsub pubsub'
+'Sample data for pubsub'
 
-from pubsub import set_user, post_message, follow
 from pprint import pprint
 from time import time
+from pubsub import set_user, post_message, follow
 
 set_user('raymondh', displayname='Raymond Hettinger', password='superman123',
          email='python@rcn.com', bio='Former fashion photographer', photo='raymond.jpg')
