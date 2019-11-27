@@ -88,8 +88,8 @@ def check_user(user: User, password: str) -> bool:
     sleep(random.expovariate(10))
     return secrets.compare_digest(hashpass, target_hash_pass)
 
-def get_user(user: User) -> UserInfo:
-    return user_info[user]
+def get_user(user: User) -> Optional[UserInfo]:
+    return user_info.get(user)
 
 time_unit_cuts = [60, 3600, 3600*24]                                           # type: List[int]
 time_units = [(1, 'second'), (60, 'minute'), (3600, 'hour'), (24*3600, 'day')] # type: List[Tuple[int, str]]
@@ -100,11 +100,11 @@ def age(post: Post) -> str:
     units = seconds // divisor
     return '%d %s ago' % (units, unit + ('' if units==1 else 's'))
 
-def save():
+def save() -> None:
     with open('pubsub.pickle', 'wb') as f:
         pickle.dump([posts, user_posts, hashtag_index, following, followers, user_info], f)
 
-def restore():
+def restore() -> None:
     global posts, user_posts, hashtag_index, following, followers, user_info
     with open('pubsub.pickle', 'rb') as f:
         posts, user_posts, hashtag_index, following, followers, user_info = pickle.load(f)

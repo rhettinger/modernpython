@@ -58,7 +58,7 @@ def show_search():
     return dict(user=user, posts=posts, heading=heading, comb=comb)
 
 def verify_user_exists(user):
-    user in pubsub.user_info or abort(404, f'Unknown user: {user!r}')
+    pubsub.user_info[user] or abort(404, f'Unknown user: {user!r}')
 
 @get('/<user>')
 @view('user')
