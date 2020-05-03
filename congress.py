@@ -11,8 +11,12 @@ from collections import defaultdict, Counter
 import csv
 import glob
 
-Senator = NamedTuple('Senator', [('name', str), ('party', str), ('state', str)])
 VoteValue = float
+
+class Senator(NamedTuple):
+    name: str
+    party: str
+    state: str
 
 # Load votes arranged by topic and accumulate votes by senator
 vote_value = {'Nay': -1, 'Not Voting': 0, 'Yea': 1} # type: Dict[str, VoteValue]
