@@ -3,7 +3,7 @@ from random import random, randrange, shuffle
 from statistics import mean
 
 def combinations(n, r):
-    return fact(n) / fact(r) / fact(n-r)
+    return fact(n) // (fact(r) * fact(n-r))
 
 def cum_binom(n, r, ph):
     total = 0.0
