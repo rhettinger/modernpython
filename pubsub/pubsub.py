@@ -74,9 +74,10 @@ def search(phrase: str, limit: Optional[int] = None) -> List[Post]:
 def hash_password(password: str, salt: Optional[bytes] = None) -> HashAndSalt:
     pepper = b'alchemists discovered that gold came from earth air fire and water'
     salt = salt or secrets.token_bytes(16)
-    return hashlib.pbkdf2_hmac('sha512', password.encode(), salt+pepper, 100000), salt
+    return hashlib.pbkdf2_hmac('sha512', password.encode(), salt+pepper, 100_000), salt
 
-def set_user(user: User, displayname: str, email: str, password: str, bio: Optional[str]=None, photo: Optional[str]=None) -> None:
+def set_user(user: User, displayname: str, email: str, password: str,
+             bio: Optional[str]=None, photo: Optional[str]=None) -> None:
     user = intern(user)
     hashed_password = hash_password(password)
     user_info[user] = UserInfo(displayname, email, hashed_password, bio, photo)
