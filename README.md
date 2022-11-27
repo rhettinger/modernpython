@@ -48,7 +48,7 @@ Machine Learning
 The `kmeans.py` file implements k-means from scratch.  The
 `congress_data` directory has CSV files with the voting histories
 of senators in the 114th U.S. Congress.  The `congress.py` file
-demonstrates ETL (extract-transfrom-load) and unsupervised
+demonstrates ETL (extract-transform-load) and unsupervised
 machine learning (k-means) to analyze the voting clusters.
 
 
